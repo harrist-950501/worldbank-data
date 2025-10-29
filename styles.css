@@ -1,0 +1,46 @@
+/*
+  Name: Harry Cheng
+  Date: 10/28/2025
+  Section: CSE 154 AA
+
+  This is the css file links to index.html. It applies a nature theme, so most of the color are
+  mix of greenand blue, to better fit the logo of a blue husky.
+*/
+
+body {
+  font-family: "Noto Sans TC", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 20px;
+  background-color: rgba(163, 193, 252, 0.753);
+  color: #403941;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.5em;
+  margin-top: 40px;
+  padding: 5px;
+  background-color: rgba(221, 228, 241, 0.773);
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer em {
+  font-weight: bold;
+  font-style: italic;
+}
+
+#logo {
+  object-fit: cover;
+  height: 100px;
+  width: 150px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3vh;
+}
