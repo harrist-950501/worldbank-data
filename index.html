@@ -7,7 +7,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Set!</title>
+    <title>Data graphing</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="index.js"></script>
@@ -17,10 +17,45 @@
       <img id="logo" src="logo.png" alt="A logo of a husky with author's name and slogen">
     </header>
     <main>
-      <h1>Here's your data!</h1>
+      <h1>Data graphing</h1>
+      <section id="info-form">
+        <h2>Set your parameters!</h2>
+        <form>
+          <label for="country-select">Choose a country:</label>
+          <select id="country-select">
+            <option value="CN">China</option>
+            <option value="US">United States</option>
+            <option value="JP">Japan</option>
+            <option value="IN">India</option>
+            <option value="ID">Indonesia</option>
+            <option value="FR">France</option>
+            <option value="BR">Brazil</option>
+            <option value="other">Other...</option>
+          </select>
+          <!-- <br>
+          <label for="indicator">Choose a indicator:</label>
+          <select id="indicator">
+            <option value="SP.POP.TOTL">Population</option>
+            <option value="NY.GDP.MKTP.CD">GDP</option>
+          </select>
+          <br> -->
+          <p class="hidden remind">Graping maximum reach!! Please reset</p>
+          <section id="btn-container">
+            <button id="generate-btn">Generate</button>
+            <button id="reset-btn">Reset</button>
+          </section>
+        </form>
+      </section>
+      <h2>Here's your data!</h2>
+      <section>
+        <h3 id="error-page" class="hidden remind">
+          Opps! The country has no record.
+        </h3>
+      <h3>Population and GDP chart</h3>
       <section id="chart-board">
-        <canvas id="my-chart">
-
+        <canvas id="population-chart">
+        </canvas>
+        <canvas id="gdp-chart">
         </canvas>
       </section>
     </main>
@@ -30,9 +65,32 @@
         The data is provided by <em>World Bank</em> API:
         <br>
         <a href="https://datahelpdesk.worldbank.org/knowledgebase/topics/125589" target="_blank">
-          Free SVG Backgrounds and Patterns by SVGBackgrounds.com
+          The World Bank APIs
         </a>
       </p>
     </footer>
   </body>
 </html>
+
+<!-- <script>
+  const ctx = document.getElementById('chart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script> -->
