@@ -167,8 +167,8 @@
    * Card setup
    * @param {FetchJson} countryData - the corresponding fetch data
    * @param {FetchJson} popData - the corresponding fetch data
+   * @param {FetchJson} gdpData - the corresponding fetch data
    * @param {FetchJson} avgPopData - the corresponding fetch data
-   * @param {FetchJson} avgGdpData - the corresponding fetch data
    * @param {FetchJson} avgGdpData - the corresponding fetch data
    */
   function cardSetup(countryData, popData, gdpData, avgPopData, avgGdpData) {
