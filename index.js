@@ -2,14 +2,13 @@
  * Name: Harry Cheng
  * Date: 10/28/2025
  * Section: CSE 154 AA
+ *
  * This is the JS file that runs the country info-card generator.
  * It has the following features:
- *   sets up two line charts (Population and GDP) from the World Bank API
- *   allows users to choose a country to fetch data for
- *   compares data in two charts with distinct colors
- *   reset button to clear the two charts
- *   trigger reminder when fetch fails or charts excess maximum lines
- *   loads all country list (but the country might not support data fetching)
+ *   generate a info-card with specified country/region
+ *   reset button to clear the info-card board
+ *   pick from a larger range of countries/regions (Other...)
+ *   error handling
  */
 
 "use strict";
@@ -25,6 +24,14 @@
   const GDP_INDICATOR = "NY.GDP.MKTP.CD";
   const POPULATION_GROW_INDICATOR = "SP.POP.GROW";
   const GDP_GROW_INDICATOR = "NY.GDP.MKTP.KD.ZG";
+
+  // Growth rate rounding
+  const POP_GEOW_ROUND = 1000;
+  const GDP_GEOW_ROUND = 100;
+
+  // Growth rate level
+  const POSITIVE_RATE = 0.5;
+  const NEGATIVE_RATE = -0.5;
 
   window.addEventListener("load", init);
 
@@ -132,10 +139,10 @@
         })
         .then(hideErrorPage)
         .catch(() => errorHandler("Something goes wrong in card generating!!"));
-      } else {
-        errorHandler("The card is already there, try another one!!");
-      }
+    } else {
+      errorHandler("The card is already there, try another one!!");
     }
+  }
 
   function isCardExist(cards, country) {
     for (let card of cards) {
@@ -149,7 +156,7 @@
   function headerSetup(card, data) {
     let country = data[1][0];
     let name = country.name;
-    let income = country.incomeLevel.value ;
+    let income = country.incomeLevel.value;
 
     if (income === "High income") {
       card.classList.add("high-income");
@@ -238,7 +245,7 @@
     for (let i = 0; i < popGrow.length; i++) {
       avgPopGrowth += popGrow[i].value;
     }
-    avgPopGrowth = Math.floor(avgPopGrowth / popGrow.length * 1000) / 1000;
+    avgPopGrowth = Math.floor(avgPopGrowth / popGrow.length * POP_GEOW_ROUND) / POP_GEOW_ROUND;
 
     let paragraph = gen("p");
     paragraph.classList.add("card-row");
@@ -265,7 +272,7 @@
     for (let i = 0; i < gdpGrow.length; i++) {
       avgGdpGrowth += gdpGrow[i].value;
     }
-    avgGdpGrowth = Math.floor(avgGdpGrowth / gdpGrow.length * 100) / 100;
+    avgGdpGrowth = Math.floor(avgGdpGrowth / gdpGrow.length * GDP_GEOW_ROUND) / GDP_GEOW_ROUND;
 
     let paragraph = gen("p");
     paragraph.classList.add("card-row");
@@ -287,9 +294,9 @@
   }
 
   function checkGrowthLevel(growth) {
-    if (growth >= 0.5) {
+    if (growth >= POSITIVE_RATE) {
       return "positive";
-    } else if (growth <= -0.5) {
+    } else if (growth <= NEGATIVE_RATE) {
       return "negative";
     }
     return "neutral";
