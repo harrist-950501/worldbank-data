@@ -53,7 +53,7 @@
   }
 
   /**
-   * Check if the option "Other..." is selected. If so, calls in the country fecthing function.
+   * Check if the option "Other..." is selected. If so, calls in the country fetching function.
    */
   function isOtherSelected() {
     if (this.value === "other") {
@@ -64,7 +64,7 @@
 
   /**
    * Fetching data from World bank api
-   * @param {boolean} url - the url for data fetching
+   * @param {String} url - the url for data fetching
    * @return {object} - valid response if response was successful, otherwise rejected
    *                    Promise result
    */
@@ -187,7 +187,7 @@
   }
 
   /**
-   * Check if there are reapted card
+   * Check if there are repeated card
    * @param {DOMlist} cards - all the exsiting cards
    * @param {String} country - the country to be checked
    * @return {boolean} -ture if repeatness found, false otherwise
@@ -204,7 +204,7 @@
   /**
    * Card header setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the correspongding fetch data
+   * @param {FetchJson} data - the corresponding fetch data
    */
   function headerSetup(card, data) {
     let country = data[1][0];
@@ -236,7 +236,7 @@
   /**
    * Card population row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the correspongding fetch data
+   * @param {FetchJson} data - the corresponding fetch data
    */
   function popRowSetup(card, data) {
     let pop = data[1][0].value;
@@ -260,7 +260,7 @@
   /**
    * Card gdp row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the correspongding fetch data
+   * @param {FetchJson} data - the corresponding fetch data
    */
   function gdpRowSetup(card, data) {
     let gdp = Math.floor(data[1][0].value);
@@ -284,8 +284,8 @@
   /**
    * Card average gdp row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} popData - the correspongding fetch data
-   * @param {FetchJson} gdpData - the correspongding fetch data
+   * @param {FetchJson} popData - the corresponding fetch data
+   * @param {FetchJson} gdpData - the corresponding fetch data
    */
   function avgGdpRowSetup(card, popData, gdpData) {
     let pop = popData[1][0].value;
@@ -311,7 +311,7 @@
   /**
    * Card average population growth row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the correspongding fetch data
+   * @param {FetchJson} data - the corresponding fetch data
    */
   function avgPopGrowthRowSetup(card, data) {
     let popGrow = data[1];
@@ -343,7 +343,7 @@
   /**
    * Card average gdp growth row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the correspongding fetch data
+   * @param {FetchJson} data - the corresponding fetch data
    */
   function avgGdpGrowthRowSetup(card, data) {
     let gdpGrow = data[1];
