@@ -17,33 +17,25 @@
   const BASE_URL = "https://api.worldbank.org/v2";
 
   // Date for world bank data search
-  const START_YEAR = 2004;
-  const END_YEAR = 2023;
+  const YEAR_START = 2020;
+  const YEAR_END = 2023;
 
   // Indicator code for world bank data search
   const POPULATION_INDICATOR = "SP.POP.TOTL";
   const GDP_INDICATOR = "NY.GDP.MKTP.CD";
-
-  // The two chart
-  let popChart;
-  let gdpChart;
-
-  // Colors for line, maximum is 5 lines
-  const COLORS = ["#00A6CF", "#6A4C93", "#E76F51", "#2A9D8F", "#F4A261",
-    "#264653", "#D62828"];
-  let colorIndex = 0;
+  const AVERAGE_POPULATION_INDICATOR = "SP.POP.GROW";
+  const AVERAGE_GDP_INDICATOR = "NY.GDP.MKTP.KD.ZG";
 
   window.addEventListener("load", init);
 
   function init() {
-    chartSetUp();
-    id("generate-btn").addEventListener("click", eventObject => {
+    qs("#controller form").addEventListener("submit", eventObject => {
       eventObject.preventDefault();
-      chartDataFetch();
+      countryDataFetch();
     });
     id("reset-btn").addEventListener("click", eventObject => {
       eventObject.preventDefault();
-      resetBoard();
+      id("country-card-board").innerHTML = "";
     });
     id("country-select").addEventListener("change", isOtherSelected);
   }
@@ -51,10 +43,11 @@
   function isOtherSelected() {
     if (this.value === "other") {
       this.removeChild(this.lastElementChild);
-      countryFetch();
+      countrySelectFetch();
     }
   }
 
+<<<<<<< HEAD
   function resetBoard() {
     popChart.data.datasets = [];
     popChart.update();
@@ -100,6 +93,8 @@
     });
   }
 
+=======
+>>>>>>> 547c49572918058de6fc3c5a6be17c3c489341a2
   function apiFetch(url, handler) {
     fetch(url)
       .then(statusCheck)
@@ -117,10 +112,11 @@
     id("error-page").classList.remove("hidden");
   }
 
-  function countryFetch() {
+  function countrySelectFetch() {
     let url = BASE_URL + "/country?format=json&per_page=400";
     apiFetch(url, countrySelectFill);
   }
+
   function countrySelectFill(countries) {
     let select = id("country-select");
     let existOption = new Set();
@@ -142,23 +138,35 @@
 
   }
 
-  function chartDataFetch() {
+  function countryDataFetch() {
     let country = id("country-select").value;
 
+    let countryUrl = BASE_URL + "/" + country + "?format=json";
     let popUrl = BASE_URL +
       "/country/" + country +
       "/indicator/" + POPULATION_INDICATOR +
-      "?date=" + START_YEAR + ":" + END_YEAR +
+      "?date=" + YEAR_END +
       "&format=json";
     let gdpUrl = BASE_URL +
       "/country/" + country +
       "/indicator/" + GDP_INDICATOR +
-      "?date=" + START_YEAR + ":" + END_YEAR +
+      "?date=" + YEAR_END +
+      "&format=json";
+    let avgPopUrl = BASE_URL +
+      "/country/" + country +
+      "/indicator/" + AVERAGE_POPULATION_INDICATOR +
+      "?date=" + YEAR_START + ":" + YEAR_END +
+      "&format=json";
+    let avgGdpUrl = BASE_URL +
+      "/country/" + country +
+      "/indicator/" + AVERAGE_GDP_INDICATOR +
+      "?date=" + YEAR_START + ":" + YEAR_END +
       "&format=json";
 
-    let color = (COLORS[colorIndex]);
-    colorIndex++;
+      Promise.all()
+      makeCountryCard();
 
+<<<<<<< HEAD
     apiFetch(popUrl, data => updateChart(popChart, data, color));
     apiFetch(gdpUrl, data => updateChart(gdpChart, data, color));
   }
@@ -194,6 +202,12 @@
       id("generate-btn").disabled = true;
       qs("#controller p").classList.remove("hidden");
     }
+=======
+    apiFetch(popUrl, data => updateChart(data, color));
+    apiFetch(gdpUrl, data => updateChart(data, color));
+    apiFetch(avgPopUrl, data => updateChart(data, color));
+    apiFetch(avgGdpUrl, data => updateChart(data, color));
+>>>>>>> 547c49572918058de6fc3c5a6be17c3c489341a2
   }
 
   /**

@@ -19,7 +19,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Data graphing</title>
+    <title>Data fetching</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="index.js"></script>
@@ -27,13 +27,16 @@
   <body>
     <header>
       <img id="logo" src="logo.png" alt="A logo of a husky with author's name and slogen">
+<<<<<<< HEAD
     </header>
     <main>
       <h1>Data graphing</h1>
+=======
+>>>>>>> 547c49572918058de6fc3c5a6be17c3c489341a2
       <section id="controller">
         <h2>Set your parameters!</h2>
         <form>
-          <label for="country-select">Choose a country:</label>
+          <label for="country-select">Choose a country/region:</label>
           <select id="country-select">
             <option value="CN">China</option>
             <option value="US">United States</option>
@@ -45,22 +48,58 @@
             <option value="other">Other...</option>
           </select>
           <p class="hidden remind">Graping maximum reach!! Please reset</p>
-          <section id="btn-container">
-            <button id="generate-btn">Generate</button>
-            <button id="reset-btn">Reset</button>
-          </section>
+            <button>Generate</button>
         </form>
+        <button id="reset-btn">Reset</button>
       </section>
-      <h2>Here's your data!</h2>
-        <h3 id="error-page" class="hidden remind">
-          Opps! The country has no record.
-        </h3>
-      <h3>Population and GDP chart</h3>
-      <section id="chart-board">
-        <canvas id="population-chart">
-        </canvas>
-        <canvas id="gdp-chart">
-        </canvas>
+    </header>
+    <main>
+      <h1>Data fetching!!</h1>
+      <section>
+        <p>
+          Pick a country or region you interested in, then click generate to see its informaiton
+          regarding:
+        </p>
+        <ul>
+          <li>Name</li>
+          <li>Population</li>
+          <li>Total and average GDP</li>
+          <li>Growth rate</li>
+        </ul>
+        <p>
+          The data are from <em>World Bank</em>. The two indicator are data in 2023, and the
+          growth rate are average from year 2020 to 2023
+        </p>
+      </section>
+      <h2>Information cards on countries/regions</h2>
+      <h3 id="error-page" class="hidden remind"> Opps! The country has no record.</h3>
+      <section id="country-card-board">
+        <article class="country-card income-high">
+          <header>
+            <h3>Japan</h3>
+            <p">High income</p>
+          </header>
+          <p class="card-row">
+            <span class="label">Population (2023):</span>
+            <span class="value">125,700,000</span>
+          </p>
+          <p class="card-row">
+            <span class="label">GDP (2023):</span>
+            <span class="value">$5,200,000,000,000</span>
+          </p>
+          <p class="card-row">
+            <span class="label">GDP per capita:</span>
+            <span class="value">$41,300</span>
+          </p>
+          <p class="card-row growth">
+            <span class="label">Pop. growth (3y avg):</span>
+            <span class="value positive">+0.4% 📈</span>
+          </p>
+          <p class="card-row growth">
+            <span class="label">GDP growth (3y avg):</span>
+            <span class="value neutral">+1.2% ⏸️</span>
+          </p>
+        </article>
       </section>
     </main>
     <footer>
