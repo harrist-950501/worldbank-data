@@ -3,8 +3,8 @@
   Date: 10/28/2025
   Section: CSE 154 AA
 
-  This is the css file links to index.html. It applies a nature theme, so most of the color are
-  mix of greenand blue, to better fit the logo of a blue husky.
+  This is the css file links to index.html, the data graphing page. It applies a blue theme, so
+  most of the color are derive from blue, expcept from the header and.the lines in two charts.
 */
 
 body {
@@ -17,12 +17,16 @@ body {
   color: #004E64;
 }
 
-h1 {
-  margin-top: 5px;
-}
-
 main {
   text-align: center;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+main p, li{
+  font-size: 15px;
+  text-align: left;
 }
 
 footer {
@@ -62,6 +66,74 @@ canvas {
   margin: 6px 0;
 }
 
+.country-card {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1.5px solid rgba(0, 78, 100, 0.35);
+  border-radius: 12px;
+  min-width: 220px;
+  max-width: 260px;
+  padding: 10px 12px 12px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.country-card header, .card-row {
+  display: flex;
+  justify-content: space-between;
+}
+.country-card header {
+  align-items: baseline;
+}
+
+header p {
+  font-size: 14px;
+}
+
+.country-card p {
+  font-size: 10px;
+}
+
+.card-row {
+  margin: 3px 0;
+}
+
+.label {
+  color: #188baa;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.positive {
+  color: #2A9D8F;
+}
+.negative {
+  color: #D62828;
+}
+.neutral {
+  color: #6c757d;
+}
+
+/* income-based coloring (optional) */
+.income-high {
+  border-color: rgba(0, 166, 207, 0.65);
+  background: rgba(159, 255, 202, 0.15);
+}
+
+.income-upper {
+  border-color: rgba(42, 157, 143, 0.6);
+  background: rgba(42, 157, 143, 0.08);
+}
+
+.income-lower {
+  border-color: rgba(244, 162, 97, 0.7);
+  background: rgba(244, 162, 97, 0.08);
+}
+
+.income-low {
+  border-color: rgba(198, 198, 198, 0.7);
+  background: rgba(255, 255, 255, 0.35);
+}
+
 #logo {
   object-fit: cover;
   height: 100px;
@@ -72,7 +144,7 @@ canvas {
   margin-top: 3vh;
 }
 
-#info-form {
+#controller {
   background-color: #9fffcabd;
   border-radius: 10px;
   padding: 10px;
@@ -80,25 +152,15 @@ canvas {
   margin-left: auto;
   margin-right: auto;
   font-size: 0.75em;
-}
-
-#info-form h2 {
-  margin-top: 0px;
-}
-
-#btn-container {
-  margin-top: 10px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#country-card-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
   justify-content: center;
-  gap: 20px;
-}
-
-#chart-board {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#chart-board canvas {
-  margin-top: 15px;
+  margin-top: 14px;
 }
