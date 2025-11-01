@@ -2,7 +2,7 @@
  * Name: Harry Cheng
  * Date: 10/28/2025
  * Section: CSE 154 AA
- * This is the JS file for the index.html.
+ * This is the JS file that runs the data graphing tool.
  * It has the following features:
  *   sets up two line charts (Population and GDP) from the World Bank API
  *   allows users to choose a country to fetch data for
@@ -13,7 +13,7 @@
  */
 
 "use strict";
-(function (){
+(function() {
   const BASE_URL = "https://api.worldbank.org/v2";
 
   // Date for world bank data search
@@ -65,25 +65,24 @@
     let genBtn = id("generate-btn");
     if (genBtn.disabled) {
       id("generate-btn").disabled = false;
-      qs("#info-form p").classList.add("hidden");
-      colorIndex = 0;
+      qs("#controller p").classList.add("hidden");
     }
-
+    colorIndex = 0;
   }
 
   function chartSetUp() {
-    let years = Array.from({ length: END_YEAR - START_YEAR + 1}, (_, i) => START_YEAR + i);
+    let years = Array.from({length: END_YEAR - START_YEAR + 1}, (__, i) => START_YEAR + i);
 
     let popCanvas = id("population-chart");
     popChart = new Chart(popCanvas, {
       type: "line",
-      data: { labels: years, datasets: []},
+      data: {labels: years, datasets: []},
       options: {
         scales: {
           x: {title: {display: true, text: "Year"}},
           y: {title: {display: true, text: "Population"}}
         },
-        plugins: {title: {display: true, text: "Population chart" }}
+        plugins: {title: {display: true, text: "Population chart"}}
       }
     });
 
@@ -96,7 +95,7 @@
           x: {title: {display: true, text: "Year"}},
           y: {title: {display: true, text: "GDP (current US$)"}}
         },
-        plugins: {title: {display: true, text: "GDP chart" }}
+        plugins: {title: {display: true, text: "GDP chart"}}
       }
     });
   }
@@ -114,7 +113,7 @@
     id("error-page").classList.add("hidden");
   }
 
-  function errorHandler(error) {
+  function errorHandler() {
     id("error-page").classList.remove("hidden");
   }
 
@@ -193,7 +192,7 @@
   function isChartLineOver(length) {
     if (length === COLORS.length) {
       id("generate-btn").disabled = true;
-      qs("#info-form p").classList.remove("hidden");
+      qs("#controller p").classList.remove("hidden");
     }
   }
 

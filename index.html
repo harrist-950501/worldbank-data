@@ -3,6 +3,18 @@
   Name: Harry Cheng
   Date: 10/28/2025
   Section: CSE 154 AA
+
+  This is the html file for the the data graphing tool.
+  Header:
+    Author logo
+    data graphing controller to select country
+    chart-generate and chart-reset buttons
+    hidden reminding text
+  Main:
+    hidden error page and two chart: GDP and Population
+  Footer:
+    Author©
+    Data source
 -->
 <html lang="en">
   <head>
@@ -18,7 +30,7 @@
     </header>
     <main>
       <h1>Data graphing</h1>
-      <section id="info-form">
+      <section id="controller">
         <h2>Set your parameters!</h2>
         <form>
           <label for="country-select">Choose a country:</label>
@@ -32,13 +44,6 @@
             <option value="BR">Brazil</option>
             <option value="other">Other...</option>
           </select>
-          <!-- <br>
-          <label for="indicator">Choose a indicator:</label>
-          <select id="indicator">
-            <option value="SP.POP.TOTL">Population</option>
-            <option value="NY.GDP.MKTP.CD">GDP</option>
-          </select>
-          <br> -->
           <p class="hidden remind">Graping maximum reach!! Please reset</p>
           <section id="btn-container">
             <button id="generate-btn">Generate</button>

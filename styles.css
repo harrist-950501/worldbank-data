@@ -3,8 +3,8 @@
   Date: 10/28/2025
   Section: CSE 154 AA
 
-  This is the css file links to index.html. It applies a nature theme, so most of the color are
-  mix of greenand blue, to better fit the logo of a blue husky.
+  This is the css file links to index.html, the data graphing page. It applies a blue theme, so
+  most of the color are derive from blue, expcept from the header and.the lines in two charts.
 */
 
 body {
@@ -72,7 +72,7 @@ canvas {
   margin-top: 3vh;
 }
 
-#info-form {
+#controller {
   background-color: #9fffcabd;
   border-radius: 10px;
   padding: 10px;
@@ -82,7 +82,7 @@ canvas {
   font-size: 0.75em;
 }
 
-#info-form h2 {
+#controller h2 {
   margin-top: 0px;
 }
 
