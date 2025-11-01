@@ -67,7 +67,7 @@
    * @param {boolean} url - the url for data fetching
    * @return {object} - valid response if response was successful, otherwise rejected
    *                    Promise result
-  */
+   */
   function apiFetch(url) {
     return fetch(url)
       .then(statusCheck)
@@ -81,7 +81,7 @@
 
   /**
    * Hide the error page
-  */
+   */
   function hideErrorPage() {
     id("error-page").classList.add("hidden");
   }
@@ -89,7 +89,7 @@
   /**
    * Show the error page
    * @param {String} message - the error message to be displayed
-  */
+   */
   function errorHandler(message) {
     let errorPage = id("error-page");
     errorPage.textContent = message;
@@ -98,16 +98,16 @@
 
   /**
    * Fetch all the country and call in the list filltor
-  */
+   */
   function countrySelectFetch() {
     let url = BASE_URL + "/country?format=json&per_page=400";
-    apiFetch(url).then(countrySelectFill)
+    apiFetch(url).then(countrySelectFill);
   }
 
   /**
    * The list filltor, no repeated country/region
    * @param {FetchJson} countries - the json of country-fetching
-  */
+   */
   function countrySelectFill(countries) {
     let select = id("country-select");
     let existOption = new Set();
@@ -131,7 +131,7 @@
 
   /**
    * Fetch all the data for a country info-card.
-  */
+   */
   function countryDataFetch() {
     let country = id("country-select").value;
 
@@ -180,7 +180,7 @@
    * @param {DOMlist} cards - all the exsiting cards
    * @param {String} country - the country to be checked
    * @return {boolean} -ture if repeatness found, false otherwise
-  */
+   */
   function isCardExist(cards, country) {
     for (let card of cards) {
       if (card.id === country) {
@@ -194,7 +194,7 @@
    * Card header setup
    * @param {DOMelement} card -the card to be added in
    * @param {FetchArray} data - the correspongding fetch data
-  */
+   */
   function headerSetup(card, data) {
     let country = data[1][0];
     let name = country.name;
@@ -226,7 +226,7 @@
    * Card population row setup
    * @param {DOMelement} card -the card to be added in
    * @param {FetchArray} data - the correspongding fetch data
-  */
+   */
   function popRowSetup(card, data) {
     let pop = data[1][0].value;
 
@@ -250,7 +250,7 @@
    * Card gdp row setup
    * @param {DOMelement} card -the card to be added in
    * @param {FetchArray} data - the correspongding fetch data
-  */
+   */
   function gdpRowSetup(card, data) {
     let gdp = Math.floor(data[1][0].value);
 
@@ -273,8 +273,9 @@
   /**
    * Card average gdp row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchArray} data - the correspongding fetch data
-  */
+   * @param {FetchArray} popData - the correspongding fetch data
+   * @param {FetchArray} gdpData - the correspongding fetch data
+   */
   function avgGdpRowSetup(card, popData, gdpData) {
     let pop = popData[1][0].value;
     let gdp = Math.floor(gdpData[1][0].value);
@@ -300,7 +301,7 @@
    * Card average population growth row setup
    * @param {DOMelement} card -the card to be added in
    * @param {FetchArray} data - the correspongding fetch data
-  */
+   */
   function avgPopGrowthRowSetup(card, data) {
     let popGrow = data[1];
     let avgPopGrowth = 0;
@@ -332,7 +333,7 @@
    * Card average gdp growth row setup
    * @param {DOMelement} card -the card to be added in
    * @param {FetchArray} data - the correspongding fetch data
-  */
+   */
   function avgGdpGrowthRowSetup(card, data) {
     let gdpGrow = data[1];
     let avgGdpGrowth = 0;
@@ -364,7 +365,7 @@
    * Return the level of a growth rate
    * @param {float} growth -a growth rate to check
    * @return {String} the level of growth rate
-  */
+   */
   function checkGrowthLevel(growth) {
     if (growth >= POSITIVE_RATE) {
       return "positive";
