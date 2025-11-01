@@ -68,7 +68,7 @@ canvas {
 
 .country-card {
   background: rgba(255, 255, 255, 0.78);
-  border: 1.5px solid rgba(0, 78, 100, 0.35);
+  border: 3px solid;
   border-radius: 12px;
   min-width: 220px;
   max-width: 260px;
@@ -90,7 +90,7 @@ header p {
 }
 
 .country-card p {
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .card-row {
@@ -113,25 +113,24 @@ header p {
   color: #6c757d;
 }
 
-/* income-based coloring (optional) */
-.income-high {
-  border-color: rgba(0, 166, 207, 0.65);
-  background: rgba(159, 255, 202, 0.15);
+.high-income {
+  border-color: rgba(0, 110, 160, 0.9);
+  background: rgba(209, 243, 255, 0.95);
 }
 
-.income-upper {
-  border-color: rgba(42, 157, 143, 0.6);
-  background: rgba(42, 157, 143, 0.08);
+.upper-income {
+  border-color: rgba(0, 146, 116, 0.9);
+  background: rgba(208, 247, 236, 0.95);
 }
 
-.income-lower {
-  border-color: rgba(244, 162, 97, 0.7);
-  background: rgba(244, 162, 97, 0.08);
+.lower-income {
+  border-color: rgba(230, 126, 34, 0.95);
+  background: rgba(255, 239, 220, 0.95);
 }
 
-.income-low {
-  border-color: rgba(198, 198, 198, 0.7);
-  background: rgba(255, 255, 255, 0.35);
+.low-income {
+  border-color: rgba(120, 120, 140, 0.9);
+  background: rgba(242, 242, 248, 0.95);
 }
 
 #logo {
