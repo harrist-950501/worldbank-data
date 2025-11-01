@@ -247,7 +247,7 @@
   }
 
   /**
-   * Card population row setup
+   * Card gdp row setup
    * @param {DOMelement} card -the card to be added in
    * @param {FetchArray} data - the correspongding fetch data
   */
@@ -270,6 +270,11 @@
     card.appendChild(paragraph);
   }
 
+  /**
+   * Card average gdp row setup
+   * @param {DOMelement} card -the card to be added in
+   * @param {FetchArray} data - the correspongding fetch data
+  */
   function avgGdpRowSetup(card, popData, gdpData) {
     let pop = popData[1][0].value;
     let gdp = Math.floor(gdpData[1][0].value);
@@ -291,6 +296,11 @@
     card.appendChild(paragraph);
   }
 
+  /**
+   * Card average population growth row setup
+   * @param {DOMelement} card -the card to be added in
+   * @param {FetchArray} data - the correspongding fetch data
+  */
   function avgPopGrowthRowSetup(card, data) {
     let popGrow = data[1];
     let avgPopGrowth = 0;
@@ -318,6 +328,11 @@
     card.appendChild(paragraph);
   }
 
+  /**
+   * Card average gdp growth row setup
+   * @param {DOMelement} card -the card to be added in
+   * @param {FetchArray} data - the correspongding fetch data
+  */
   function avgGdpGrowthRowSetup(card, data) {
     let gdpGrow = data[1];
     let avgGdpGrowth = 0;
@@ -345,6 +360,11 @@
     card.appendChild(paragraph);
   }
 
+  /**
+   * Return the level of a growth rate
+   * @param {float} growth -a growth rate to check
+   * @return {String} the level of growth rate
+  */
   function checkGrowthLevel(growth) {
     if (growth >= POSITIVE_RATE) {
       return "positive";
