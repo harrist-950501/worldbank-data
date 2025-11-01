@@ -3,8 +3,10 @@
   Date: 10/28/2025
   Section: CSE 154 AA
 
-  This is the css file links to index.html, the data graphing page. It applies a blue theme, so
-  most of the color are derive from blue, expcept from the header and.the lines in two charts.
+  This is the css file links to index.html, the country info-card generator. It applies a blue
+  theme that fit into author's logo, a blue-white husky.
+  However, header, error page, and cards apply different color sets to distinct from
+  the overall page.
 */
 
 body {
@@ -24,7 +26,7 @@ main {
   margin-right: auto;
 }
 
-main p, li{
+main p, li {
   font-size: 15px;
   text-align: left;
 }
@@ -81,6 +83,7 @@ canvas {
   display: flex;
   justify-content: space-between;
 }
+
 .country-card header {
   align-items: baseline;
 }
@@ -106,9 +109,11 @@ header p {
 .positive {
   color: #2A9D8F;
 }
+
 .negative {
   color: #D62828;
 }
+
 .neutral {
   color: #6c757d;
 }
