@@ -35,6 +35,11 @@
 
   window.addEventListener("load", init);
 
+  /**
+   * Initialize the card generator.
+   * Call corresponding function for generate, reset when getting click.
+   * Also call corresponding function when the country select list is change.
+   */
   function init() {
     qs("#controller form").addEventListener("submit", eventObject => {
       eventObject.preventDefault();
@@ -47,6 +52,9 @@
     id("country-select").addEventListener("change", isOtherSelected);
   }
 
+  /**
+   * Check if the option "Other..." is selected. If so, calls in the country fecthing function.
+   */
   function isOtherSelected() {
     if (this.value === "other") {
       this.removeChild(this.lastElementChild);
@@ -54,6 +62,12 @@
     }
   }
 
+  /**
+   * Fetching data from World bank api
+   * @param {boolean} url - the url for data fetching
+   * @return {object} - valid response if response was successful, otherwise rejected
+   *                    Promise result
+  */
   function apiFetch(url) {
     return fetch(url)
       .then(statusCheck)
@@ -65,21 +79,35 @@
       .catch(() => errorHandler("Opps! The country has no record. Unsecussful fetching"));
   }
 
+  /**
+   * Hide the error page
+  */
   function hideErrorPage() {
     id("error-page").classList.add("hidden");
   }
 
+  /**
+   * Show the error page
+   * @param {String} message - the error message to be displayed
+  */
   function errorHandler(message) {
     let errorPage = id("error-page");
     errorPage.textContent = message;
     errorPage.classList.remove("hidden");
   }
 
+  /**
+   * Fetch all the country and call in the list filltor
+  */
   function countrySelectFetch() {
     let url = BASE_URL + "/country?format=json&per_page=400";
     apiFetch(url).then(countrySelectFill)
   }
 
+  /**
+   * The list filltor, no repeated country/region
+   * @param {FetchJson} countries - the json of country-fetching
+  */
   function countrySelectFill(countries) {
     let select = id("country-select");
     let existOption = new Set();
@@ -101,6 +129,9 @@
 
   }
 
+  /**
+   * Fetch all the data for a country info-card.
+  */
   function countryDataFetch() {
     let country = id("country-select").value;
 
@@ -144,6 +175,12 @@
     }
   }
 
+  /**
+   * Check if there are reapted card
+   * @param {DOMlist} cards - all the exsiting cards
+   * @param {String} country - the country to be checked
+   * @return {boolean} -ture if repeatness found, false otherwise
+  */
   function isCardExist(cards, country) {
     for (let card of cards) {
       if (card.id === country) {
@@ -153,6 +190,11 @@
     return false;
   }
 
+  /**
+   * Card header setup
+   * @param {DOMelement} card -the card to be added in
+   * @param {FetchArray} data - the correspongding fetch data
+  */
   function headerSetup(card, data) {
     let country = data[1][0];
     let name = country.name;
@@ -180,6 +222,11 @@
     card.appendChild(header);
   }
 
+  /**
+   * Card population row setup
+   * @param {DOMelement} card -the card to be added in
+   * @param {FetchArray} data - the correspongding fetch data
+  */
   function popRowSetup(card, data) {
     let pop = data[1][0].value;
 
@@ -199,6 +246,11 @@
     card.appendChild(paragraph);
   }
 
+  /**
+   * Card population row setup
+   * @param {DOMelement} card -the card to be added in
+   * @param {FetchArray} data - the correspongding fetch data
+  */
   function gdpRowSetup(card, data) {
     let gdp = Math.floor(data[1][0].value);
 
