@@ -134,7 +134,6 @@
    */
   function countryDataFetch() {
     let country = id("country-select").value;
-
     let cards = qsa(".country-card");
     if (!isCardExist(cards, country)) {
       let countryUrl = BASE_URL + "/country/" + country + "?format=json";
@@ -155,24 +154,36 @@
         apiFetch(agdpGrowUrl)
       ])
         .then(([countryData, popData, gdpData, avgPopData, avgGdpData]) => {
-          let card = gen("article");
-          card.classList.add("country-card");
-          card.id = countryData[1][0].iso2Code;
-
-          headerSetup(card, countryData);
-          popRowSetup(card, popData);
-          gdpRowSetup(card, gdpData);
-          avgGdpRowSetup(card, popData, gdpData);
-          avgPopGrowthRowSetup(card, avgPopData);
-          avgGdpGrowthRowSetup(card, avgGdpData);
-
-          id("country-card-board").appendChild(card);
+          cardSetup(countryData, popData, gdpData, avgPopData, avgGdpData);
         })
         .then(hideErrorPage)
         .catch(() => errorHandler("Something goes wrong in card generating!!"));
     } else {
       errorHandler("The card is already there, try another one!!");
     }
+  }
+
+  /**
+   * Card setup
+   * @param {FetchJson} countryData - the corresponding fetch data
+   * @param {FetchJson} popData - the corresponding fetch data
+   * @param {FetchJson} avgPopData - the corresponding fetch data
+   * @param {FetchJson} avgGdpData - the corresponding fetch data
+   * @param {FetchJson} avgGdpData - the corresponding fetch data
+   */
+  function cardSetup(countryData, popData, gdpData, avgPopData, avgGdpData) {
+    let card = gen("article");
+    card.classList.add("country-card");
+    card.id = countryData[1][0].iso2Code;
+
+    headerSetup(card, countryData);
+    popRowSetup(card, popData);
+    gdpRowSetup(card, gdpData);
+    avgGdpRowSetup(card, popData, gdpData);
+    avgPopGrowthRowSetup(card, avgPopData);
+    avgGdpGrowthRowSetup(card, avgGdpData);
+
+    id("country-card-board").appendChild(card);
   }
 
   /**
@@ -193,7 +204,7 @@
   /**
    * Card header setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchArray} data - the correspongding fetch data
+   * @param {FetchJson} data - the correspongding fetch data
    */
   function headerSetup(card, data) {
     let country = data[1][0];
@@ -225,7 +236,7 @@
   /**
    * Card population row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchArray} data - the correspongding fetch data
+   * @param {FetchJson} data - the correspongding fetch data
    */
   function popRowSetup(card, data) {
     let pop = data[1][0].value;
@@ -249,7 +260,7 @@
   /**
    * Card gdp row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchArray} data - the correspongding fetch data
+   * @param {FetchJson} data - the correspongding fetch data
    */
   function gdpRowSetup(card, data) {
     let gdp = Math.floor(data[1][0].value);
@@ -273,8 +284,8 @@
   /**
    * Card average gdp row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchArray} popData - the correspongding fetch data
-   * @param {FetchArray} gdpData - the correspongding fetch data
+   * @param {FetchJson} popData - the correspongding fetch data
+   * @param {FetchJson} gdpData - the correspongding fetch data
    */
   function avgGdpRowSetup(card, popData, gdpData) {
     let pop = popData[1][0].value;
@@ -300,7 +311,7 @@
   /**
    * Card average population growth row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchArray} data - the correspongding fetch data
+   * @param {FetchJson} data - the correspongding fetch data
    */
   function avgPopGrowthRowSetup(card, data) {
     let popGrow = data[1];
@@ -332,7 +343,7 @@
   /**
    * Card average gdp growth row setup
    * @param {DOMelement} card -the card to be added in
-   * @param {FetchArray} data - the correspongding fetch data
+   * @param {FetchJson} data - the correspongding fetch data
    */
   function avgGdpGrowthRowSetup(card, data) {
     let gdpGrow = data[1];
