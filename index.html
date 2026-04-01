@@ -1,37 +1,27 @@
 <!DOCTYPE html>
 <!--
   Name: Harry Cheng
-  Date: 10/28/2025
-  Section: CSE 154 AA
-
-  This is the html file for the the country info-card generator.
-  Header:
-    Author logo
-    country/region select
-    card generate button
-    board reset button
-  Main:
-    brief introduction on data
-    card board
-  Footer:
-    Author©
-    Data source
-  Hope you enjoy!
+  Date: 03/31/2026
+  Description: Main page for the World Bank data explorer with chart and card views.
 -->
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Country data fetching</title>
+    <title>World Bank data explorer</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="index.js"></script>
   </head>
   <body>
     <header>
       <img id="logo" src="logo.png" alt="A logo of a husky with author's name and slogen">
-      <section id="controller">
-        <h2>Set your parameters!</h2>
+    </header>
+    <main>
+      <h1>World Bank data explorer</h1>
+      <section id="control-panel">
+        <h2>Set your parameters</h2>
         <form>
-          <label for="country-select">Choose a country/region:</label>
+          <label for="country-select">Choose an economy or region:</label>
           <select id="country-select">
             <option value="CN">China</option>
             <option value="US">United States</option>
@@ -42,32 +32,43 @@
             <option value="BR">Brazil</option>
             <option value="other">Other...</option>
           </select>
-          <button>Generate</button>
+          <label for="view-select">Choose a view:</label>
+          <select id="view-select">
+            <option value="chart">Charts</option>
+            <option value="card">Cards</option>
+          </select>
+          <p id="chart-limit-message" class="hidden remind">
+            Graphing maximum reached. Please reset to compare more economies or regions.
+          </p>
+          <section id="button-panel">
+            <button id="generate-btn">Generate</button>
+            <button id="reset-btn">Reset</button>
+          </section>
         </form>
-        <button id="reset-btn">Reset</button>
       </section>
-    </header>
-    <main>
-      <h1>Country data fetching</h1>
-      <section>
+      <section id="page-intro">
+        <h2>Explore economy and region data</h2>
         <p>
-          Pick a country or region you interested in, then click generate to see its informaiton
-          regarding:
+          <span>Chart mode:</span> compare multiple economies or regions over time.
         </p>
-        <ul>
-          <li>Name</li>
-          <li>Population</li>
-          <li>Total and average GDP</li>
-          <li>Growth rate</li>
-        </ul>
         <p>
-          The data are from <em>World Bank</em>. The two indicator are data in 2023, and the
-          growth rate are average from year 2020 to 2023
+          <span>Card mode:</span> inspect one economy or region summary for the latest
+          available years.
         </p>
       </section>
-      <h2>Information cards</h2>
-      <h3 id="error-page" class="hidden remind"></h3>
-      <section id="country-card-board">
+      <h2>Results</h2>
+      <h3 id="error-message" class="hidden remind"></h3>
+      <section id="chart-section">
+        <h3>Population and GDP charts</h3>
+        <section id="chart-board">
+          <canvas id="population-chart"></canvas>
+          <canvas id="gdp-chart"></canvas>
+        </section>
+      </section>
+      <section id="card-section" class="hidden">
+        <h3>Economy and region information cards</h3>
+        <section id="country-card-board">
+        </section>
       </section>
     </main>
     <footer>

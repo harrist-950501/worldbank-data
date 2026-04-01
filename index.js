@@ -1,59 +1,96 @@
 /*
  * Name: Harry Cheng
- * Date: 10/28/2025
- * Section: CSE 154 AA
- *
- * This is the JS file that runs the country info-card generator.
- * It has the following features:
- *   generate a info-card with specified country/region
- *   reset button to clear the info-card board
- *   pick from a larger range of countries/regions (Other...)
- *   error handling
+ * Date: 03/31/2026
+ * Description: Behavior for the World Bank data explorer with chart and card views.
  */
 
 "use strict";
 (function() {
   const BASE_URL = "https://api.worldbank.org/v2";
 
-  // Date for world bank data search
-  const YEAR_START = 2020;
-  const YEAR_END = 2023;
+  const CHART_START_YEAR = 2004;
+  const CARD_START_YEAR = 2020;
+  const END_YEAR = 2023;
 
-  // Indicator code for world bank data search
   const POPULATION_INDICATOR = "SP.POP.TOTL";
   const GDP_INDICATOR = "NY.GDP.MKTP.CD";
   const POPULATION_GROW_INDICATOR = "SP.POP.GROW";
   const GDP_GROW_INDICATOR = "NY.GDP.MKTP.KD.ZG";
 
-  // Growth rate rounding
-  const POP_GEOW_ROUND = 1000;
-  const GDP_GEOW_ROUND = 100;
+  const POP_GROW_ROUND = 1000;
+  const GDP_GROW_ROUND = 100;
 
-  // Growth rate level
   const POSITIVE_RATE = 0.5;
   const NEGATIVE_RATE = -0.5;
+
+  const COLORS = ["#00A6CF", "#6A4C93", "#E76F51", "#2A9D8F", "#F4A261",
+    "#264653", "#D62828"];
+
+  let popChart;
+  let gdpChart;
+  let colorIndex = 0;
 
   window.addEventListener("load", init);
 
   /**
-   * Initialize the card generator.
-   * Call corresponding function for generate, reset when getting click.
-   * Also call corresponding function when the country select list is change.
+   * Initializes the page with charts and shared event listeners.
    */
   function init() {
-    qs("#controller form").addEventListener("submit", eventObject => {
+    chartSetUp();
+    viewChange();
+
+    id("generate-btn").addEventListener("click", eventObject => {
       eventObject.preventDefault();
-      countryDataFetch();
+      hideErrorPage();
+
+      if (id("view-select").value === "chart") {
+        chartDataFetch();
+      } else {
+        cardDataFetch();
+      }
     });
+
     id("reset-btn").addEventListener("click", eventObject => {
       eventObject.preventDefault();
-      id("country-card-board").innerHTML = "";
+
+      if (id("view-select").value === "chart") {
+        resetBoard();
+      } else {
+        id("country-card-board").innerHTML = "";
+      }
+
+      hideErrorPage();
     });
+
     id("country-select").addEventListener("change", isOtherSelected);
+    id("view-select").addEventListener("change", viewChange);
   }
 
   /**
-   * Check if the option "Other..." is selected. If so, calls in the country fetching function.
+   * Switches between chart mode and card mode displays.
+   */
+  function viewChange() {
+    if (id("view-select").value === "chart") {
+      id("chart-section").classList.remove("hidden");
+      id("card-section").classList.add("hidden");
+
+      if (popChart.data.datasets.length === COLORS.length) {
+        id("generate-btn").disabled = true;
+        id("chart-limit-message").classList.remove("hidden");
+      } else {
+        id("generate-btn").disabled = false;
+        id("chart-limit-message").classList.add("hidden");
+      }
+    } else {
+      id("chart-section").classList.add("hidden");
+      id("card-section").classList.remove("hidden");
+      id("generate-btn").disabled = false;
+      id("chart-limit-message").classList.add("hidden");
+    }
+  }
+
+  /**
+   * Checks whether "Other..." was selected and loads more economies or regions.
    */
   function isOtherSelected() {
     if (this.value === "other") {
@@ -63,41 +100,96 @@
   }
 
   /**
-   * Fetching data from World bank api
-   * @param {String} url - the url for data fetching
-   * @return {object} - valid response if response was successful, otherwise rejected
-   *                    Promise result
+   * Clears both charts and resets chart mode state.
    */
-  function apiFetch(url) {
-    return fetch(url)
-      .then(statusCheck)
-      .then(res => res.json())
-      .then(data => {
-        hideErrorPage();
-        return data;
-      })
-      .catch(() => errorHandler("Opps! The country has no record. Unsecussful fetching"));
+  function resetBoard() {
+    popChart.data.datasets = [];
+    popChart.update();
+
+    gdpChart.data.datasets = [];
+    gdpChart.update();
+
+    if (id("generate-btn").disabled) {
+      id("generate-btn").disabled = false;
+      id("chart-limit-message").classList.add("hidden");
+      colorIndex = 0;
+    }
   }
 
   /**
-   * Hide the error page
+   * Sets up the population and GDP charts.
    */
-  function hideErrorPage() {
-    id("error-page").classList.add("hidden");
+  function chartSetUp() {
+    let years = Array.from(
+      {length: END_YEAR - CHART_START_YEAR + 1},
+      (_, i) => CHART_START_YEAR + i
+    );
+
+    let popCanvas = id("population-chart");
+    popChart = new Chart(popCanvas, {
+      type: "line",
+      data: {
+        labels: years,
+        datasets: []
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Year"
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Population"
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "Population chart"
+          }
+        }
+      }
+    });
+
+    let gdpCanvas = id("gdp-chart");
+    gdpChart = new Chart(gdpCanvas, {
+      type: "line",
+      data: {
+        labels: years,
+        datasets: []
+      },
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Year"
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: "GDP (current US$)"
+            }
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: "GDP chart"
+          }
+        }
+      }
+    });
   }
 
   /**
-   * Show the error page
-   * @param {String} message - the error message to be displayed
-   */
-  function errorHandler(message) {
-    let errorPage = id("error-page");
-    errorPage.textContent = message;
-    errorPage.classList.remove("hidden");
-  }
-
-  /**
-   * Fetch all the country and call in the list filltor
+   * Fetches the full list of economies and regions.
    */
   function countrySelectFetch() {
     let url = BASE_URL + "/country?format=json&per_page=400";
@@ -105,8 +197,8 @@
   }
 
   /**
-   * The list filltor, no repeated country/region
-   * @param {FetchJson} countries - the json of country-fetching
+   * Fills the select menu with fetched economies and regions.
+   * @param {object} countries - fetched World Bank country data.
    */
   function countrySelectFill(countries) {
     let select = id("country-select");
@@ -126,37 +218,98 @@
         select.appendChild(option);
       }
     }
-
   }
 
   /**
-   * Fetch all the data for a country info-card.
+   * Fetches data for chart mode and updates both charts.
    */
-  function countryDataFetch() {
-    let country = id("country-select").value;
+  function chartDataFetch() {
+    let economy = id("country-select").value;
+    let popUrl = BASE_URL + "/country/" + economy + "/indicator/" +
+      POPULATION_INDICATOR + "?date=" + CHART_START_YEAR + ":" + END_YEAR + "&format=json";
+    let gdpUrl = BASE_URL + "/country/" + economy + "/indicator/" +
+      GDP_INDICATOR + "?date=" + CHART_START_YEAR + ":" + END_YEAR + "&format=json";
+    let color = COLORS[colorIndex];
+
+    Promise.all([apiFetch(popUrl), apiFetch(gdpUrl)])
+      .then(([popData, gdpData]) => {
+        updateChart(popChart, popData, color);
+        updateChart(gdpChart, gdpData, color);
+        colorIndex++;
+      })
+      .catch(() => errorHandler("Something goes wrong in chart generating!!"));
+  }
+
+  /**
+   * Adds one economy or region dataset to the given chart.
+   * @param {object} chart - the Chart.js chart to update.
+   * @param {object} data - fetched indicator data.
+   * @param {string} color - line color for the dataset.
+   */
+  function updateChart(chart, data, color) {
+    let rows = data[1];
+    let economyName = rows[0].country.value;
+    let values = rows.map(row => row.value).reverse();
+    let lineExist = chart.data.datasets.find(dataset => dataset.label === economyName);
+
+    if (!lineExist) {
+      chart.data.datasets.push({
+        label: economyName,
+        data: values,
+        borderColor: color,
+        backgroundColor: color + "33",
+        borderWidth: 2,
+        tension: 0.3,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: "#FFFFFF"
+      });
+    }
+
+    chart.update();
+    isChartLineOver(chart.data.datasets.length);
+  }
+
+  /**
+   * Disables chart generation when the maximum number of lines is reached.
+   * @param {number} length - current number of chart datasets.
+   */
+  function isChartLineOver(length) {
+    if (length === COLORS.length) {
+      id("generate-btn").disabled = true;
+      id("chart-limit-message").classList.remove("hidden");
+    }
+  }
+
+  /**
+   * Fetches all data needed to build one information card.
+   */
+  function cardDataFetch() {
+    let economy = id("country-select").value;
     let cards = qsa(".country-card");
-    if (!isCardExist(cards, country)) {
-      let countryUrl = BASE_URL + "/country/" + country + "?format=json";
-      let popUrl = BASE_URL + "/country/" + country + "/indicator/" + POPULATION_INDICATOR +
-        "?date=" + YEAR_END + "&format=json";
-      let gdpUrl = BASE_URL + "/country/" + country + "/indicator/" + GDP_INDICATOR +
-        "?date=" + YEAR_END + "&format=json";
-      let popGrowUrl = BASE_URL + "/country/" + country + "/indicator/" +
-        POPULATION_GROW_INDICATOR + "?date=" + YEAR_START + ":" + YEAR_END + "&format=json";
-      let agdpGrowUrl = BASE_URL + "/country/" + country + "/indicator/" + GDP_GROW_INDICATOR +
-        "?date=" + YEAR_START + ":" + YEAR_END + "&format=json";
+
+    if (!isCardExist(cards, economy)) {
+      let countryUrl = BASE_URL + "/country/" + economy + "?format=json";
+      let popUrl = BASE_URL + "/country/" + economy + "/indicator/" + POPULATION_INDICATOR +
+        "?date=" + END_YEAR + "&format=json";
+      let gdpUrl = BASE_URL + "/country/" + economy + "/indicator/" + GDP_INDICATOR +
+        "?date=" + END_YEAR + "&format=json";
+      let popGrowUrl = BASE_URL + "/country/" + economy + "/indicator/" +
+        POPULATION_GROW_INDICATOR + "?date=" + CARD_START_YEAR + ":" + END_YEAR +
+        "&format=json";
+      let gdpGrowUrl = BASE_URL + "/country/" + economy + "/indicator/" +
+        GDP_GROW_INDICATOR + "?date=" + CARD_START_YEAR + ":" + END_YEAR + "&format=json";
 
       Promise.all([
         apiFetch(countryUrl),
         apiFetch(popUrl),
         apiFetch(gdpUrl),
         apiFetch(popGrowUrl),
-        apiFetch(agdpGrowUrl)
+        apiFetch(gdpGrowUrl)
       ])
         .then(([countryData, popData, gdpData, avgPopData, avgGdpData]) => {
           cardSetup(countryData, popData, gdpData, avgPopData, avgGdpData);
         })
-        .then(hideErrorPage)
         .catch(() => errorHandler("Something goes wrong in card generating!!"));
     } else {
       errorHandler("The card is already there, try another one!!");
@@ -164,12 +317,12 @@
   }
 
   /**
-   * Card setup
-   * @param {FetchJson} countryData - the corresponding fetch data
-   * @param {FetchJson} popData - the corresponding fetch data
-   * @param {FetchJson} gdpData - the corresponding fetch data
-   * @param {FetchJson} avgPopData - the corresponding fetch data
-   * @param {FetchJson} avgGdpData - the corresponding fetch data
+   * Builds and appends one information card.
+   * @param {object} countryData - fetched economy or region metadata.
+   * @param {object} popData - fetched population data.
+   * @param {object} gdpData - fetched GDP data.
+   * @param {object} avgPopData - fetched population growth data.
+   * @param {object} avgGdpData - fetched GDP growth data.
    */
   function cardSetup(countryData, popData, gdpData, avgPopData, avgGdpData) {
     let card = gen("article");
@@ -187,10 +340,10 @@
   }
 
   /**
-   * Check if there are repeated card
-   * @param {DOMlist} cards - all the exsiting cards
-   * @param {String} country - the country to be checked
-   * @return {boolean} -ture if repeatness found, false otherwise
+   * Checks whether a card already exists for the selected economy or region.
+   * @param {NodeList} cards - existing card elements.
+   * @param {string} country - selected economy or region code.
+   * @returns {boolean} true if the card already exists, false otherwise.
    */
   function isCardExist(cards, country) {
     for (let card of cards) {
@@ -202,9 +355,9 @@
   }
 
   /**
-   * Card header setup
-   * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the corresponding fetch data
+   * Adds the header row to a card.
+   * @param {HTMLElement} card - card element being built.
+   * @param {object} data - fetched economy or region metadata.
    */
   function headerSetup(card, data) {
     let country = data[1][0];
@@ -234,9 +387,9 @@
   }
 
   /**
-   * Card population row setup
-   * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the corresponding fetch data
+   * Adds the population row to a card.
+   * @param {HTMLElement} card - card element being built.
+   * @param {object} data - fetched population data.
    */
   function popRowSetup(card, data) {
     let pop = data[1][0].value;
@@ -246,7 +399,7 @@
 
     let label = gen("span");
     label.classList.add("label");
-    label.textContent = "Population (" + YEAR_END + "):";
+    label.textContent = "Population (" + END_YEAR + "):";
 
     let value = gen("span");
     value.classList.add("value");
@@ -258,9 +411,9 @@
   }
 
   /**
-   * Card gdp row setup
-   * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the corresponding fetch data
+   * Adds the GDP row to a card.
+   * @param {HTMLElement} card - card element being built.
+   * @param {object} data - fetched GDP data.
    */
   function gdpRowSetup(card, data) {
     let gdp = Math.floor(data[1][0].value);
@@ -270,7 +423,7 @@
 
     let label = gen("span");
     label.classList.add("label");
-    label.textContent = "GDP (" + YEAR_END + "):";
+    label.textContent = "GDP (" + END_YEAR + "):";
 
     let value = gen("span");
     value.classList.add("value");
@@ -282,10 +435,10 @@
   }
 
   /**
-   * Card average gdp row setup
-   * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} popData - the corresponding fetch data
-   * @param {FetchJson} gdpData - the corresponding fetch data
+   * Adds the GDP per capita row to a card.
+   * @param {HTMLElement} card - card element being built.
+   * @param {object} popData - fetched population data.
+   * @param {object} gdpData - fetched GDP data.
    */
   function avgGdpRowSetup(card, popData, gdpData) {
     let pop = popData[1][0].value;
@@ -309,21 +462,21 @@
   }
 
   /**
-   * Card average population growth row setup
-   * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the corresponding fetch data
+   * Adds the average population growth row to a card.
+   * @param {HTMLElement} card - card element being built.
+   * @param {object} data - fetched population growth data.
    */
   function avgPopGrowthRowSetup(card, data) {
     let popGrow = data[1];
     let avgPopGrowth = 0;
+
     for (let i = 0; i < popGrow.length; i++) {
       avgPopGrowth += popGrow[i].value;
     }
-    avgPopGrowth = Math.floor(avgPopGrowth / popGrow.length * POP_GEOW_ROUND) / POP_GEOW_ROUND;
+    avgPopGrowth = Math.floor(avgPopGrowth / popGrow.length * POP_GROW_ROUND) / POP_GROW_ROUND;
 
     let paragraph = gen("p");
     paragraph.classList.add("card-row");
-    paragraph.classList.add("growth");
 
     let label = gen("span");
     label.classList.add("label");
@@ -331,8 +484,7 @@
 
     let value = gen("span");
     value.classList.add("value");
-    let growthLevel = checkGrowthLevel(avgPopGrowth);
-    value.classList.add(growthLevel);
+    value.classList.add(checkGrowthLevel(avgPopGrowth));
     value.textContent = avgPopGrowth + "%";
 
     paragraph.appendChild(label);
@@ -341,30 +493,29 @@
   }
 
   /**
-   * Card average gdp growth row setup
-   * @param {DOMelement} card -the card to be added in
-   * @param {FetchJson} data - the corresponding fetch data
+   * Adds the average GDP growth row to a card.
+   * @param {HTMLElement} card - card element being built.
+   * @param {object} data - fetched GDP growth data.
    */
   function avgGdpGrowthRowSetup(card, data) {
     let gdpGrow = data[1];
     let avgGdpGrowth = 0;
+
     for (let i = 0; i < gdpGrow.length; i++) {
       avgGdpGrowth += gdpGrow[i].value;
     }
-    avgGdpGrowth = Math.floor(avgGdpGrowth / gdpGrow.length * GDP_GEOW_ROUND) / GDP_GEOW_ROUND;
+    avgGdpGrowth = Math.floor(avgGdpGrowth / gdpGrow.length * GDP_GROW_ROUND) / GDP_GROW_ROUND;
 
     let paragraph = gen("p");
     paragraph.classList.add("card-row");
-    paragraph.classList.add("growth");
 
     let label = gen("span");
     label.classList.add("label");
-    label.textContent = "Average gdp growth";
+    label.textContent = "Average GDP growth";
 
     let value = gen("span");
     value.classList.add("value");
-    let growthLevel = checkGrowthLevel(avgGdpGrowth);
-    value.classList.add(growthLevel);
+    value.classList.add(checkGrowthLevel(avgGdpGrowth));
     value.textContent = avgGdpGrowth + "%";
 
     paragraph.appendChild(label);
@@ -373,9 +524,9 @@
   }
 
   /**
-   * Return the level of a growth rate
-   * @param {float} growth -a growth rate to check
-   * @return {String} the level of growth rate
+   * Returns the growth class name for a given growth rate.
+   * @param {number} growth - growth rate to evaluate.
+   * @returns {string} CSS class name for the growth level.
    */
   function checkGrowthLevel(growth) {
     if (growth >= POSITIVE_RATE) {
@@ -387,11 +538,45 @@
   }
 
   /**
-   * Helper function to return the response's result text if successful, otherwise
-   * returns the rejected Promise result with an error status and corresponding text
-   * @param {object} res - response to check for success/error
-   * @return {object} - valid response if response was successful, otherwise rejected
-   *                    Promise result
+   * Fetches data from the World Bank API and returns parsed JSON.
+   * @param {string} url - the URL to fetch.
+   * @returns {Promise<object>} parsed JSON data from the response.
+   */
+  function apiFetch(url) {
+    return fetch(url)
+      .then(statusCheck)
+      .then(res => res.json())
+      .then(data => {
+        hideErrorPage();
+        return data;
+      })
+      .catch(() => {
+        errorHandler("Opps! The economy or region has no record.");
+        throw new Error("Fetch failed");
+      });
+  }
+
+  /**
+   * Hides the shared error message.
+   */
+  function hideErrorPage() {
+    id("error-message").classList.add("hidden");
+  }
+
+  /**
+   * Shows the shared error message.
+   * @param {string} message - the message to display.
+   */
+  function errorHandler(message) {
+    let errorPage = id("error-message");
+    errorPage.textContent = message;
+    errorPage.classList.remove("hidden");
+  }
+
+  /**
+   * Checks whether a fetch response is successful.
+   * @param {object} res - fetch response object.
+   * @returns {Promise<object>} the original response if successful.
    */
   async function statusCheck(res) {
     if (!res.ok) {
@@ -401,36 +586,27 @@
   }
 
   /**
-   * Returns the element that has the ID attribute with the specified value.
+   * Returns the element with the given ID.
    * @param {string} id - element ID.
-   * @returns {object} - DOM object associated with id.
+   * @returns {HTMLElement} matching DOM element.
    */
   function id(id) {
     return document.getElementById(id);
   }
 
   /**
-   * Returns first element matching selector.
-   * @param {string} selector - CSS query selector.
-   * @returns {object} - DOM object associated selector.
-   */
-  function qs(selector) {
-    return document.querySelector(selector);
-  }
-
-  /**
-   * Returns the array of elements that match the given CSS selector.
-   * @param {string} query - CSS query selector
-   * @returns {object[]} array of DOM objects matching the query.
+   * Returns all elements matching the selector.
+   * @param {string} query - CSS selector string.
+   * @returns {NodeList} matching DOM elements.
    */
   function qsa(query) {
     return document.querySelectorAll(query);
   }
 
   /**
-   * Returns a element with the given tagname.
-   * @param {string} tagname - HTML element tagname
-   * @returns {HTMLElement} a HTML element that hasn't bind with DOM yet.
+   * Creates a new element with the given tag name.
+   * @param {string} tagname - HTML tag name.
+   * @returns {HTMLElement} newly created element.
    */
   function gen(tagname) {
     return document.createElement(tagname);
