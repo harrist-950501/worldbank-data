@@ -32,7 +32,7 @@ This project was built to practice client-side API integration, DOM manipulation
 
 ## Live Site
 
-Add your live project URL here.
+[World bank data explorer](https://harrist-950501.github.io/worldbank-data/)
 
 ## Author
 
